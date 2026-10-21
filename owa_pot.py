@@ -4,7 +4,7 @@ import logging
 from functools import wraps
 from flask import Flask, redirect, render_template, request, send_from_directory, Response, make_response
 
-log_file = 'dumpass.log'
+log_file = os.environ.get('OWA_POT_LOG', 'dumpass.log')
 logger = logging.getLogger('honeypot')
 logger.setLevel(logging.DEBUG)
 fh = logging.FileHandler(log_file)
@@ -127,17 +127,17 @@ def create_app(test_config=None):
     @app.route('/owa/auth/15.1.1466/themes/resources/segoeui-regular.ttf', methods=['GET'])
     @changeheader
     def font_segoeui_regular_ttf():
-        return send_from_directory(app.static_folder, filename='segoeui-regular.ttf', conditional=True)
+        return send_from_directory(app.static_folder, path='segoeui-regular.ttf', conditional=True)
         
     @app.route('/owa/auth/15.1.1466/themes/resources/segoeui-semilight.ttf', methods=['GET'])
     @changeheader
     def font_segoeui_semilight_ttf():
-        return send_from_directory(app.static_folder, filename='segoeui-semilight.ttf', conditional=True)
+        return send_from_directory(app.static_folder, path='segoeui-semilight.ttf', conditional=True)
 
     @app.route('/owa/auth/15.1.1466/themes/resources/favicon.ico', methods=['GET'])
     @changeheader
     def favicon_ico():
-        return send_from_directory(app.static_folder, filename='favicon.ico', conditional=True)
+        return send_from_directory(app.static_folder, path='favicon.ico', conditional=True)
 
     @app.route('/owa/auth.owa', methods=['GET', 'POST'])
     @changeheader
@@ -177,4 +177,4 @@ def create_app(test_config=None):
 
 if __name__ == "__main__":
     if __name__ == '__main__':
-        create_app().run(debug=False,port=80, host="0.0.0.0")
+        create_app().run(debug=False, port=int(os.environ.get("OWA_POT_PORT", "80")), host=os.environ.get("OWA_POT_HOST", "0.0.0.0"))

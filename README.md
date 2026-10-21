@@ -1,3 +1,17 @@
+Adapted from https://github.com/joda32/owa-honeypot by Willem Mouton (joda32).
+
+# owa-honeypot-nx
+
+owa-honeypot-nx is owa-honeypot (last upstream commit 17d7166, June 2019) updated so that it installs and runs on current Python 3 and Flask. The upstream `requirements.txt` pins Flask 1.0.2, which no longer imports on Python 3.10 or later (it uses `collections.MutableMapping`) and does not work with current Jinja2 and Werkzeug releases. The routes, templates, responses and log format are unchanged. The original README follows below.
+
+## Changes from the original
+
+* `requirements.txt` pins Flask 3.1.3 and Werkzeug 3.1.9 instead of Flask 1.0.2.
+* `send_from_directory()` is called with `path=` instead of the `filename=` keyword, which Flask removed in 2.2.
+* Optional environment variables, with the original values as defaults: `OWA_POT_LOG` (credential log file, default `dumpass.log` in the working directory), `OWA_POT_PORT` (default `80`) and `OWA_POT_HOST` (default `0.0.0.0`).
+
+Note that `python owa_pot.py` still uses Flask's built-in development server, as the original does (see "here be dragons" below). Current Werkzeug releases send their own `Server` and `Date` headers in addition to the `Server: Microsoft-IIS/7.5` header the application sets.
+
 # owa-honeypot
 A basic flask based Outlook Web Honey pot
 
